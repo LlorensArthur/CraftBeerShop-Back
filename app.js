@@ -2,18 +2,17 @@ import express from 'express';
 import session from 'express-session';
 import {fileURLToPath} from 'url';
 import path from 'path';
-import mysql from 'mysql';
 import bcrypt from 'bcrypt';
 import fileUpload from 'express-fileupload';
 import 'dotenv/config';
 import cors from "cors"
 import bodyParser  from "body-parser";
-import sendMail from './router/index.js'
+import sendMail from './routes/index.js'
 import mail from './lib/mailing.js'
+import router from './routes/index.js';
+import {PORT} from './config/index.js';
 
 const saltrounds = 10;
-
-const PORT = process.env.PORT || process.env.SERVER_LOCAL_PORT || 9050;
 const { HOSTNAME_DB, NAME_DB, USERNAME_DB, PASSWORD_DB } = process.env;
 
 const app = express();
@@ -41,6 +40,15 @@ app.use(session({
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(fileUpload({createParentPath : true}));
+
+app.use(router);
+//app.use('/*', pageNotFound);
+
+app.listen(PORT, ()=>{
+    console.log(`listening at http://localhost:${PORT}`);
+});
+
+
 // app.use((req,res, next) =>{
 //     const pathname = parseurl(req).pathname;
 //     console.log(pathname);
@@ -65,6 +73,8 @@ app.use(fileUpload({createParentPath : true}));
 /*******************/
 /*******************/
 // connexion à la BDD
+
+/*
 const pool = mysql.createPool({
     connectionLimit: 10000,
     host: "localhost",
@@ -78,10 +88,11 @@ pool.getConnection(err=>{
         throw err;
     }
     console.log('Bien connecté à la BDD!');
-})
-/*******************/
-/*******************/
+})*/
 
+/*******************/
+/*******************/
+/*
 app.get("/api/v1/sendMail", (req, res,next)=>{
     mail("arthur.llorens@3wa.io", "Bienvenue", "Salut toi", "On te souhaite la bienvenue")
 });
@@ -209,6 +220,7 @@ app.post('/product', (req,res)=>{
 /****** ADMIN ******/
 /*******************/
 
+/*
 app.get('/admin', (req,res)=>{
     const sql = 'SELECT Post.Id, Title, Contents, CreationTimestamp, FirstName, LastName, Category.Name AS Category_Name FROM Post INNER JOIN Author ON Post.Author_Id = Author.Id INNER JOIN Category ON Post.Category_Id = Category.Id ORDER BY CreationTimestamp DESC';
 
@@ -271,6 +283,7 @@ app.get('/delete_post/:id', (req,res)=>{
 /****** USER *******/
 /*******************/
 
+/*
 app.get('/register', (req,res)=>{
     res.render('layout', { template: "register", session : req.session, error: null})
 })
@@ -337,3 +350,4 @@ app.listen(PORT, ()=>{
     console.log(`listening at http://localhost:${PORT}`);
 });
 
+*/
